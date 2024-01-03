@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Task from "./Task";
+import { Task as TaskType } from "./boardSlice";
 
 const StyledColumn = styled.div`
   display: flex;
@@ -22,12 +23,21 @@ const TaskContainer = styled.div`
   gap: 2rem;
 `;
 
-const Column = () => {
+interface ColumnProps {
+  name: string;
+  tasks: TaskType[];
+}
+
+const Column: React.FC<ColumnProps> = ({ name, tasks }) => {
   return (
     <StyledColumn>
-      <Label>Todo (1)</Label>
+      <Label>
+        {name} ({tasks.length})
+      </Label>
       <TaskContainer>
-        <Task />
+        {tasks.map((task) => (
+          <Task task={task} key={task.id} />
+        ))}
       </TaskContainer>
     </StyledColumn>
   );

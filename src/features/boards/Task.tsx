@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { Task as TaskType } from "./boardSlice";
+import React from "react";
 
 const StyledTask = styled.div`
   background-color: var(--color-grey-0);
@@ -19,10 +21,10 @@ const Subtitle = styled.p`
   font-weight: 500;
 `;
 
-const Task = () => {
+const Task: React.FC<{ task: TaskType }> = ({ task }) => {
   return (
     <StyledTask>
-      <Title>Clean the house</Title>
+      <Title>{task.title}</Title>
       <Subtitle>1 of 2 subtasks</Subtitle>
     </StyledTask>
   );
