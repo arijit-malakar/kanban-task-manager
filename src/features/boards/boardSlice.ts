@@ -22,7 +22,7 @@ interface Column {
   tasks: Task[];
 }
 
-interface Board {
+export interface Board {
   id: number;
   name: string;
   columns: Column[];
