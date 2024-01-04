@@ -12,18 +12,9 @@ const StyledSidebar = styled.aside`
   gap: 3.2rem;
 `;
 
-const Label = styled.p`
-  font-size: 1.6rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.4px;
-  color: var(--color-grey-500);
-`;
-
 const Sidebar = () => {
   return (
     <StyledSidebar>
-      <Label>All Boards (3)</Label>
       <BoardNav />
     </StyledSidebar>
   );

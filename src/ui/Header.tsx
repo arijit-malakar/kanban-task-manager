@@ -2,6 +2,8 @@ import styled from "styled-components";
 import Heading from "./Heading";
 import Button from "./Button";
 import Logo from "./Logo";
+import { useAppSelector } from "../hooks";
+import { getCurrentBoard } from "../features/boards/boardSlice";
 
 const StyledHeader = styled.header`
   background-color: var(--color-grey-0);
@@ -16,15 +18,18 @@ const StyledHeader = styled.header`
 const HeaderItems = styled.div`
   flex: 1;
   display: flex;
+  align-items: center;
   justify-content: space-between;
 `;
 
 const Header = () => {
+  const board = useAppSelector(getCurrentBoard);
+
   return (
     <StyledHeader>
       <Logo />
       <HeaderItems>
-        <Heading as="h3">Board Name</Heading>
+        <Heading as="h3">{board?.name}</Heading>
         <Button variation="primary">+ Add New Task</Button>
       </HeaderItems>
     </StyledHeader>

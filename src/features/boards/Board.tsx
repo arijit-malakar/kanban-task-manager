@@ -5,7 +5,6 @@ import { getCurrentBoard } from "./boardSlice";
 
 const StyledBoard = styled.div`
   display: flex;
-  padding: 2px;
   gap: 2.4rem;
 `;
 
