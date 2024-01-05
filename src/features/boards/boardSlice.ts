@@ -64,6 +64,32 @@ const boardSlice = createSlice({
       });
     },
 
+    editBoard(state, action: PayloadAction<Board>) {
+      const { id: boardId, name, columns } = action.payload;
+
+      const updatedColumns = columns.map((column, index) => ({
+        ...column,
+        id: column.id !== undefined ? column.id : index,
+        tasks: column.tasks !== undefined ? column.tasks : [],
+      }));
+
+      state.boards = state.boards.map((board) =>
+        board.id === boardId
+          ? { ...board, name, columns: updatedColumns }
+          : board
+      );
+    },
+
+    deleteBoard(state, action: PayloadAction<number>) {
+      const boardIndex = state.boards.findIndex(
+        (board) => board.id === action.payload
+      );
+
+      if (boardIndex !== -1) {
+        state.boards.splice(boardIndex, 1);
+      }
+    },
+
     addColumn(
       state,
       action: PayloadAction<{ boardId: number; columnName: string }>
@@ -100,8 +126,14 @@ const boardSlice = createSlice({
   },
 });
 
-export const { setCurrentBoard, addBoard, addColumn, addTask } =
-  boardSlice.actions;
+export const {
+  setCurrentBoard,
+  addBoard,
+  editBoard,
+  deleteBoard,
+  addColumn,
+  addTask,
+} = boardSlice.actions;
 
 export default boardSlice.reducer;
 

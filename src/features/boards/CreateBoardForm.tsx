@@ -7,13 +7,20 @@ import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import ButtonIcon from "../../ui/ButtonIcon";
 import { useAppDispatch } from "../../hooks";
-import { Board as BoardType, addBoard } from "./boardSlice";
+import { Board as BoardType, addBoard, editBoard } from "./boardSlice";
 
 interface CreateBoardFormProps {
   onCloseModal?: () => void;
+  boardToEdit?: BoardType;
 }
 
-const CreateBoardForm: React.FC<CreateBoardFormProps> = ({ onCloseModal }) => {
+const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
+  onCloseModal,
+  boardToEdit = { id: null },
+}) => {
+  const { id: editId, ...editValues } = boardToEdit;
+  const isFormEditable = editId !== null && editId !== undefined;
+
   const {
     register,
     control,
@@ -21,9 +28,11 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({ onCloseModal }) => {
     reset,
     formState: { errors },
   } = useForm<BoardType>({
-    defaultValues: {
-      columns: [{ name: "" }],
-    },
+    defaultValues: isFormEditable
+      ? editValues
+      : {
+          columns: [{ name: "" }],
+        },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -35,7 +44,11 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({ onCloseModal }) => {
 
   const onSubmit: SubmitHandler<BoardType> = (data) => {
     const { name, columns } = data;
-    dispatch(addBoard({ name, columns }));
+    if (isFormEditable) {
+      dispatch(editBoard({ id: editId, name, columns }));
+    } else {
+      dispatch(addBoard({ name, columns }));
+    }
     reset();
     onCloseModal?.();
   };
@@ -46,7 +59,14 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({ onCloseModal }) => {
         <Input
           type="text"
           id="name"
-          {...register("name", { required: "Board name is required" })}
+          {...register("name", {
+            required: "Board name is required",
+            // validate: (value) =>
+            //   boards.find(
+            //     (board) =>
+            //       board.name.toLowerCase() === value.toLowerCase().trim()
+            //   ) && "Board name is already used",
+          })}
         />
       </FormRow>
 
@@ -81,7 +101,9 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({ onCloseModal }) => {
           >
             + Add New Column
           </Button>
-          <Button type="submit">Create New Board</Button>
+          <Button type="submit">
+            {isFormEditable ? "Save Changes" : "Create New Board"}
+          </Button>
         </>
       </FormRow>
     </Form>
