@@ -3,9 +3,9 @@ import Heading from "./Heading";
 import Button from "./Button";
 import Logo from "./Logo";
 import Menus from "./Menus";
+import ModifyBoard from "../features/boards/ModifyBoard";
 import { useAppSelector } from "../hooks";
 import { getCurrentBoard } from "../features/boards/boardSlice";
-import { HiPencil, HiTrash } from "react-icons/hi2";
 
 const StyledHeader = styled.header`
   background-color: var(--color-grey-0);
@@ -30,7 +30,6 @@ const HeaderOptions = styled.div`
 
 const Header = () => {
   const board = useAppSelector(getCurrentBoard);
-  const boardId = useAppSelector((state) => state.boards.currentBoardId);
 
   return (
     <StyledHeader>
@@ -41,14 +40,7 @@ const Header = () => {
           <Button variation="primary">+ Add New Task</Button>
 
           <Menus>
-            <Menus.Menu>
-              <Menus.Toggle id={`${boardId}`} />
-
-              <Menus.List id={`${boardId}`}>
-                <Menus.Button icon={<HiPencil />}>Edit Board</Menus.Button>
-                <Menus.Button icon={<HiTrash />}>Delete Board</Menus.Button>
-              </Menus.List>
-            </Menus.Menu>
+            <ModifyBoard />
           </Menus>
         </HeaderOptions>
       </HeaderItems>

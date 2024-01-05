@@ -29,7 +29,6 @@ const variations = {
   primary: css`
     color: var(--color-brand-50);
     background-color: var(--color-brand-600);
-    border-radius: var(--border-radius-round);
 
     &:hover {
       background-color: var(--color-brand-700);
@@ -39,7 +38,6 @@ const variations = {
     color: var(--color-grey-600);
     background: var(--color-grey-0);
     border: 1px solid var(--color-grey-200);
-    border-radius: var(--border-radius-semi);
 
     &:hover {
       background-color: var(--color-grey-50);
@@ -57,6 +55,7 @@ const variations = {
 
 const Button = styled.button<ButtonProps>`
   border: none;
+  border-radius: var(--border-radius-round);
   box-shadow: var(--shadow-sm);
 
   ${(props) => sizes[props.size || "medium"]}

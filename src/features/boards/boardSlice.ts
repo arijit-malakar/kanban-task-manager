@@ -17,9 +17,9 @@ export interface Task {
 }
 
 interface Column {
-  id: number;
+  id?: number;
   name: string;
-  tasks: Task[];
+  tasks?: Task[];
 }
 
 export interface Board {
@@ -44,6 +44,24 @@ const boardSlice = createSlice({
   reducers: {
     setCurrentBoard(state, action: PayloadAction<number>) {
       state.currentBoardId = action.payload;
+    },
+
+    addBoard(
+      state,
+      action: PayloadAction<{ name: string; columns: Column[] }>
+    ) {
+      const newBoardId = state.boards.length;
+      const newColumns = action.payload.columns.map((column, index) => ({
+        id: index,
+        name: column.name,
+        tasks: [],
+      }));
+
+      state.boards.push({
+        id: newBoardId,
+        name: action.payload.name,
+        columns: newColumns,
+      });
     },
 
     addColumn(
@@ -75,14 +93,15 @@ const boardSlice = createSlice({
           (column) => column.id === action.payload.columnId
         );
         if (column) {
-          column.tasks.push(action.payload.task);
+          column.tasks?.push(action.payload.task);
         }
       }
     },
   },
 });
 
-export const { setCurrentBoard, addColumn, addTask } = boardSlice.actions;
+export const { setCurrentBoard, addBoard, addColumn, addTask } =
+  boardSlice.actions;
 
 export default boardSlice.reducer;
 
