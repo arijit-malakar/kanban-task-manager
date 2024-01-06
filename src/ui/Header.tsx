@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import Heading from "./Heading";
-import Button from "./Button";
 import Logo from "./Logo";
 import Menus from "./Menus";
 import ModifyBoard from "../features/boards/ModifyBoard";
+import AddTask from "../features/tasks/AddTask";
 import { useAppSelector } from "../hooks";
 import { getCurrentBoard } from "../features/boards/boardSlice";
 
@@ -37,8 +37,7 @@ const Header = () => {
       <HeaderItems>
         <Heading as="h3">{board?.name}</Heading>
         <HeaderOptions>
-          <Button variation="primary">+ Add New Task</Button>
-
+          <AddTask />
           <Menus>
             <ModifyBoard />
           </Menus>

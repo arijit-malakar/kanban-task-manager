@@ -107,19 +107,17 @@ const boardSlice = createSlice({
       }
     },
 
-    addTask(
-      state,
-      action: PayloadAction<{ boardId: number; columnId: number; task: Task }>
-    ) {
-      const board = state.boards.find(
-        (board) => board.id === action.payload.boardId
-      );
+    addTask(state, action: PayloadAction<{ boardId: number; task: Task }>) {
+      const { boardId, task } = action.payload;
+
+      const board = state.boards.find((board) => board.id === boardId);
       if (board) {
         const column = board.columns.find(
-          (column) => column.id === action.payload.columnId
+          (column) => column.id === task.statusId
         );
         if (column) {
-          column.tasks?.push(action.payload.task);
+          const newTaskId = column.tasks?.length;
+          column.tasks?.push({ ...task, id: newTaskId as number });
         }
       }
     },

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Task from "./Task";
+import Task from "../tasks/Task";
 import { Task as TaskType } from "./boardSlice";
 
 const StyledColumn = styled.div`

@@ -6,7 +6,7 @@ import FormRowMultiple from "../../ui/FormRowMultiple";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import ButtonIcon from "../../ui/ButtonIcon";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { Board as BoardType, addBoard, editBoard } from "./boardSlice";
 
 interface CreateBoardFormProps {
@@ -25,6 +25,7 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
     register,
     control,
     handleSubmit,
+    watch,
     reset,
     formState: { errors },
   } = useForm<BoardType>({
@@ -40,6 +41,7 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
     name: "columns",
   });
 
+  const { boards } = useAppSelector((state) => state.boards);
   const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<BoardType> = (data) => {
@@ -61,11 +63,14 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
           id="name"
           {...register("name", {
             required: "Board name is required",
-            // validate: (value) =>
-            //   boards.find(
-            //     (board) =>
-            //       board.name.toLowerCase() === value.toLowerCase().trim()
-            //   ) && "Board name is already used",
+            validate: (value) =>
+              boards.find(
+                (board) =>
+                  board.name.toLowerCase() === value.toLowerCase().trim() &&
+                  board.id !== watch("id")
+              )
+                ? "Board name is already used"
+                : true,
           })}
         />
       </FormRow>

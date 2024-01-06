@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Task as TaskType } from "./boardSlice";
+import { Task as TaskType } from "../boards/boardSlice";
 import React from "react";
 
 const StyledTask = styled.div`
@@ -25,7 +25,10 @@ const Task: React.FC<{ task: TaskType }> = ({ task }) => {
   return (
     <StyledTask>
       <Title>{task.title}</Title>
-      <Subtitle>1 of 2 subtasks</Subtitle>
+      <Subtitle>
+        {task.subtasks.filter((subtask) => subtask.isCompleted === true).length}{" "}
+        of {task.subtasks.length} subtasks
+      </Subtitle>
     </StyledTask>
   );
 };

@@ -14,7 +14,7 @@ const Board = () => {
   return (
     <StyledBoard>
       {board?.columns.map((column) => (
-        <Column name={column.name} tasks={column.tasks} key={column.id} />
+        <Column name={column.name} tasks={column.tasks || []} key={column.id} />
       ))}
     </StyledBoard>
   );
