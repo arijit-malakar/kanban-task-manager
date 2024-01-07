@@ -6,6 +6,7 @@ import FormRowMultiple from "../../ui/FormRowMultiple";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import ButtonIcon from "../../ui/ButtonIcon";
+import Heading from "../../ui/Heading";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { Board as BoardType, addBoard, editBoard } from "./boardSlice";
 
@@ -57,6 +58,12 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
+      <FormRow>
+        <Heading as="h4">
+          {isFormEditable ? "Edit Board" : "Add New Board"}
+        </Heading>
+      </FormRow>
+
       <FormRow label="Name" error={errors.name?.message}>
         <Input
           type="text"
@@ -99,13 +106,15 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
 
       <FormRow>
         <>
-          <Button
-            variation="secondary"
-            type="button"
-            onClick={() => append({ name: "" })}
-          >
-            + Add New Column
-          </Button>
+          {fields.length < 6 && (
+            <Button
+              variation="secondary"
+              type="button"
+              onClick={() => append({ name: "" })}
+            >
+              + Add New Column
+            </Button>
+          )}
           <Button type="submit">
             {isFormEditable ? "Save Changes" : "Create New Board"}
           </Button>

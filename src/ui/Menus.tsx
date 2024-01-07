@@ -7,7 +7,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { HiEllipsisVertical } from "react-icons/hi2";
-import styled, { IStyledComponent } from "styled-components";
+import styled, { IStyledComponent, StyleSheetManager } from "styled-components";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 
 interface Position {
@@ -172,9 +172,11 @@ const List: React.FC<ListProps> = ({ id, children }) => {
   if (openId !== id) return null;
 
   return createPortal(
-    <StyledList position={position} ref={ref}>
-      {children}
-    </StyledList>,
+    <StyleSheetManager shouldForwardProp={(prop) => prop !== "position"}>
+      <StyledList position={position} ref={ref}>
+        {children}
+      </StyledList>
+    </StyleSheetManager>,
     document.body
   );
 };

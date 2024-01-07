@@ -44,7 +44,7 @@ interface FormRowProps {
 const FormRow: React.FC<FormRowProps> = ({ label, error, children }) => {
   return (
     <StyledFormRow>
-      <Label htmlFor={children.props.id}>{label}</Label>
+      {label && <Label htmlFor={children.props.id}>{label}</Label>}
       {children}
       {error && <Error>{error}</Error>}
     </StyledFormRow>

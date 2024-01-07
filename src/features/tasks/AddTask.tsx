@@ -5,11 +5,11 @@ import Button from "../../ui/Button";
 const AddTask = () => {
   return (
     <Modal>
-      <Modal.Open opens="board-form">
+      <Modal.Open opens="task-form">
         <Button variation="primary">+ Add New Task</Button>
       </Modal.Open>
 
-      <Modal.Window name="board-form">
+      <Modal.Window name="task-form">
         <CreateTaskForm />
       </Modal.Window>
     </Modal>

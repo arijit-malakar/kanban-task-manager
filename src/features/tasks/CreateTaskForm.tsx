@@ -7,6 +7,7 @@ import Input from "../../ui/Input";
 import Select from "../../ui/Select";
 import Button from "../../ui/Button";
 import ButtonIcon from "../../ui/ButtonIcon";
+import Heading from "../../ui/Heading";
 import {
   Task as TaskType,
   addTask,
@@ -63,6 +64,10 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({ onCloseModal }) => {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
+      <FormRow>
+        <Heading as="h4">Add New Task</Heading>
+      </FormRow>
+
       <FormRow label="Title" error={errors.title?.message}>
         <Input
           type="text"

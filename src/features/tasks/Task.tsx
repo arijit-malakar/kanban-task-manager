@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import ViewTask from "./ViewTask";
+import Modal from "../../ui/Modal";
 import { Task as TaskType } from "../boards/boardSlice";
-import React from "react";
 
 const StyledTask = styled.div`
   background-color: var(--color-grey-0);
@@ -23,13 +24,24 @@ const Subtitle = styled.p`
 
 const Task: React.FC<{ task: TaskType }> = ({ task }) => {
   return (
-    <StyledTask>
-      <Title>{task.title}</Title>
-      <Subtitle>
-        {task.subtasks.filter((subtask) => subtask.isCompleted === true).length}{" "}
-        of {task.subtasks.length} subtasks
-      </Subtitle>
-    </StyledTask>
+    <Modal>
+      <Modal.Open opens="task-view">
+        <StyledTask>
+          <Title>{task.title}</Title>
+          <Subtitle>
+            {
+              task.subtasks.filter((subtask) => subtask.isCompleted === true)
+                .length
+            }{" "}
+            of {task.subtasks.length} subtasks
+          </Subtitle>
+        </StyledTask>
+      </Modal.Open>
+
+      <Modal.Window name="task-view">
+        <ViewTask task={task} />
+      </Modal.Window>
+    </Modal>
   );
 };
 
