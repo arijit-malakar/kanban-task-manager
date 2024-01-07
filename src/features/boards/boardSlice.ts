@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import data from "./data.json";
 
-interface Subtask {
+export interface Subtask {
   title: string;
   isCompleted: boolean;
 }
@@ -121,6 +121,127 @@ const boardSlice = createSlice({
         }
       }
     },
+
+    updateTaskStatus(
+      state,
+      action: PayloadAction<{
+        boardId: number;
+        columnId: number;
+        taskId: number;
+        status: string;
+        statusId: number;
+      }>
+    ) {
+      const { boardId, columnId, taskId, status, statusId } = action.payload;
+
+      const updatedBoards = state.boards.map((board) => {
+        if (board.id === boardId) {
+          const sourceColumn = board.columns.find(
+            (column) => column.id === columnId
+          );
+          const destColumn = board.columns.find(
+            (column) => column.id === statusId
+          );
+
+          if (sourceColumn && destColumn) {
+            const taskToMove = sourceColumn.tasks?.find(
+              (task) => task.id === taskId
+            );
+
+            if (taskToMove) {
+              const updatedSouceTasks = sourceColumn.tasks?.filter(
+                (task) => task.id !== taskId
+              );
+              const newTaskId = destColumn.tasks ? destColumn.tasks.length : 0;
+
+              destColumn.tasks?.push({
+                ...taskToMove,
+                id: newTaskId,
+                status,
+                statusId,
+              });
+
+              return {
+                ...board,
+                columns: board.columns.map((column) => {
+                  if (column.id === columnId) {
+                    return {
+                      ...column,
+                      tasks: updatedSouceTasks,
+                    };
+                  } else if (column.id === statusId) {
+                    return {
+                      ...column,
+                      tasks: destColumn.tasks,
+                    };
+                  }
+                  return column;
+                }),
+              };
+            }
+          }
+        }
+        return board;
+      });
+
+      state.boards = updatedBoards;
+    },
+
+    updateSubtask(
+      state,
+      action: PayloadAction<{
+        boardId: number;
+        columnId: number;
+        taskId: number;
+        subtaskIndex: number;
+      }>
+    ) {
+      const { boardId, columnId, taskId, subtaskIndex } = action.payload;
+
+      const updatedBoards = state.boards.map((board) => {
+        if (board.id === boardId) {
+          const updatedColumns = board.columns.map((column) => {
+            if (column.id === columnId) {
+              const updatedTasks = column.tasks?.map((task) => {
+                if (task.id === taskId) {
+                  const updatedSubtasks = task.subtasks.map(
+                    (subtask, index) => {
+                      if (index === subtaskIndex) {
+                        return {
+                          ...subtask,
+                          isCompleted: !subtask.isCompleted,
+                        };
+                      }
+                      return subtask;
+                    }
+                  );
+
+                  return {
+                    ...task,
+                    subtasks: updatedSubtasks,
+                  };
+                }
+                return task;
+              });
+
+              return {
+                ...column,
+                tasks: updatedTasks,
+              };
+            }
+            return column;
+          });
+
+          return {
+            ...board,
+            columns: updatedColumns,
+          };
+        }
+        return board;
+      });
+
+      state.boards = updatedBoards;
+    },
   },
 });
 
@@ -131,6 +252,8 @@ export const {
   deleteBoard,
   addColumn,
   addTask,
+  updateTaskStatus,
+  updateSubtask,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;
