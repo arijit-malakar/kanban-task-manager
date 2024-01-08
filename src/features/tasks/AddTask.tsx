@@ -1,18 +1,25 @@
 import CreateTaskForm from "./CreateTaskForm";
-import Modal from "../../ui/Modal";
 import Button from "../../ui/Button";
+import ModalComponent from "../modal/ModalComponent";
+import { useAppDispatch } from "../../hooks";
+import { setCurrentModal } from "../modal/modalSlice";
 
 const AddTask = () => {
-  return (
-    <Modal>
-      <Modal.Open opens="task-form">
-        <Button variation="primary">+ Add New Task</Button>
-      </Modal.Open>
+  const dispatch = useAppDispatch();
 
-      <Modal.Window name="task-form">
+  return (
+    <>
+      <Button
+        onClick={() => dispatch(setCurrentModal("task-form"))}
+        variation="primary"
+      >
+        + Add New Task
+      </Button>
+
+      <ModalComponent name="task-form">
         <CreateTaskForm />
-      </Modal.Window>
-    </Modal>
+      </ModalComponent>
+    </>
   );
 };
 

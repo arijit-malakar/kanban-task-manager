@@ -13,13 +13,12 @@ import {
   addTask,
   getCurrentBoard,
 } from "../boards/boardSlice";
+import { setCurrentModal } from "../modal/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 
-interface CreateTaskFormProps {
-  onCloseModal?: () => void;
-}
+interface CreateTaskFormProps {}
 
-const CreateTaskForm: React.FC<CreateTaskFormProps> = ({ onCloseModal }) => {
+const CreateTaskForm: React.FC<CreateTaskFormProps> = () => {
   const {
     register,
     control,
@@ -58,7 +57,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({ onCloseModal }) => {
         })
       );
       reset();
-      onCloseModal?.();
+      dispatch(setCurrentModal(""));
     }
   };
 

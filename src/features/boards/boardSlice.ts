@@ -31,11 +31,13 @@ export interface Board {
 interface BoardState {
   boards: Board[];
   currentBoardId: number | null;
+  taskIdCounter: number;
 }
 
 const initialState: BoardState = {
   boards: data.boards,
   currentBoardId: 0,
+  taskIdCounter: 100,
 };
 
 const boardSlice = createSlice({
@@ -116,7 +118,8 @@ const boardSlice = createSlice({
           (column) => column.id === task.statusId
         );
         if (column) {
-          const newTaskId = column.tasks?.length;
+          const newTaskId = state.taskIdCounter;
+          state.taskIdCounter++;
           column.tasks?.push({ ...task, id: newTaskId as number });
         }
       }
@@ -152,11 +155,9 @@ const boardSlice = createSlice({
               const updatedSouceTasks = sourceColumn.tasks?.filter(
                 (task) => task.id !== taskId
               );
-              const newTaskId = destColumn.tasks ? destColumn.tasks.length : 0;
 
               destColumn.tasks?.push({
                 ...taskToMove,
-                id: newTaskId,
                 status,
                 statusId,
               });

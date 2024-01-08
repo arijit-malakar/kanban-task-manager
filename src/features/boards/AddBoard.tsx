@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { TbLayoutBoardSplit } from "react-icons/tb";
-import Modal from "../../ui/Modal";
 import CreateBoardForm from "./CreateBoardForm";
+import ModalComponent from "../modal/ModalComponent";
+import { useAppDispatch } from "../../hooks";
+import { setCurrentModal } from "../modal/modalSlice";
 
 const AddBoardButton = styled.button`
   display: flex;
@@ -32,19 +34,30 @@ const AddBoardButton = styled.button`
 `;
 
 const AddBoard = () => {
-  return (
-    <Modal>
-      <Modal.Open opens="board-form">
-        <AddBoardButton>
-          <TbLayoutBoardSplit />
-          <span>+ Create New Board</span>
-        </AddBoardButton>
-      </Modal.Open>
+  const dispatch = useAppDispatch();
 
-      <Modal.Window name="board-form">
+  return (
+    // <Modal>
+    //   <Modal.Open opens="board-form">
+    //     <AddBoardButton>
+    //       <TbLayoutBoardSplit />
+    //       <span>+ Create New Board</span>
+    //     </AddBoardButton>
+    //   </Modal.Open>
+
+    //   <Modal.Window name="board-form">
+    //     <CreateBoardForm />
+    //   </Modal.Window>
+    // </Modal>
+    <>
+      <AddBoardButton onClick={() => dispatch(setCurrentModal("board-form"))}>
+        <TbLayoutBoardSplit />
+        <span>+ Create New Board</span>
+      </AddBoardButton>
+      <ModalComponent name="board-form">
         <CreateBoardForm />
-      </Modal.Window>
-    </Modal>
+      </ModalComponent>
+    </>
   );
 };
 

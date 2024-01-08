@@ -9,14 +9,13 @@ import ButtonIcon from "../../ui/ButtonIcon";
 import Heading from "../../ui/Heading";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { Board as BoardType, addBoard, editBoard } from "./boardSlice";
+import { setCurrentModal } from "../modal/modalSlice";
 
 interface CreateBoardFormProps {
-  onCloseModal?: () => void;
   boardToEdit?: BoardType;
 }
 
 const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
-  onCloseModal,
   boardToEdit = { id: null },
 }) => {
   const { id: editId, ...editValues } = boardToEdit;
@@ -53,7 +52,7 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
       dispatch(addBoard({ name, columns }));
     }
     reset();
-    onCloseModal?.();
+    dispatch(setCurrentModal(""));
   };
 
   return (

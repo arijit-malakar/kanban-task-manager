@@ -2,9 +2,10 @@ import { HiPencil, HiTrash } from "react-icons/hi2";
 import CreateBoardForm from "./CreateBoardForm";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import Menus from "../../ui/Menus";
-import Modal from "../../ui/Modal";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { deleteBoard, getCurrentBoard, setCurrentBoard } from "./boardSlice";
+import ModalComponent from "../modal/ModalComponent";
+import { setCurrentModal } from "../modal/modalSlice";
 
 const ModifyBoard = () => {
   const boardId = useAppSelector((state) => state.boards.currentBoardId);
@@ -17,32 +18,37 @@ const ModifyBoard = () => {
   };
 
   return (
-    <Modal>
-      <Menus.Menu>
-        <Menus.Toggle id={`${boardId}`} />
+    <Menus.Menu>
+      <Menus.Toggle id={`${boardId}`} />
 
-        <Menus.List id={`${boardId}`}>
-          <Modal.Open opens="board-edit">
-            <Menus.Button icon={<HiPencil />}>Edit Board</Menus.Button>
-          </Modal.Open>
+      <Menus.List id={`${boardId}`}>
+        <Menus.Button
+          onClick={() => dispatch(setCurrentModal("board-edit"))}
+          icon={<HiPencil />}
+        >
+          Edit Board
+        </Menus.Button>
 
-          <Modal.Open opens="board-delete">
-            <Menus.Button icon={<HiTrash />}>Delete Board</Menus.Button>
-          </Modal.Open>
-        </Menus.List>
+        <Menus.Button
+          onClick={() => dispatch(setCurrentModal("board-delete"))}
+          icon={<HiTrash />}
+        >
+          Delete Board
+        </Menus.Button>
+      </Menus.List>
 
-        <Modal.Window name="board-edit">
-          <CreateBoardForm boardToEdit={board} />
-        </Modal.Window>
+      <ModalComponent name="board-edit">
+        <CreateBoardForm boardToEdit={board} />
+      </ModalComponent>
 
-        <Modal.Window name="board-delete">
-          <ConfirmDelete
-            resourceName={`board: ${board?.name}`}
-            onConfirm={handleBoardDelete}
-          />
-        </Modal.Window>
-      </Menus.Menu>
-    </Modal>
+      <ModalComponent name="board-delete">
+        <ConfirmDelete
+          resourceName={`board: ${board?.name}`}
+          onConfirm={handleBoardDelete}
+          onCloseModal={() => dispatch(setCurrentModal(""))}
+        />
+      </ModalComponent>
+    </Menus.Menu>
   );
 };
 

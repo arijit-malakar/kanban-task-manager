@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import ViewTask from "./ViewTask";
-import Modal from "../../ui/Modal";
+import ModalComponent from "../modal/ModalComponent";
 import { Task as TaskType } from "../boards/boardSlice";
+import { useAppDispatch } from "../../hooks";
+import { setCurrentModal } from "../modal/modalSlice";
 
 const StyledTask = styled.div`
   background-color: var(--color-grey-0);
@@ -23,25 +25,27 @@ const Subtitle = styled.p`
 `;
 
 const Task: React.FC<{ task: TaskType }> = ({ task }) => {
-  return (
-    <Modal>
-      <Modal.Open opens="task-view">
-        <StyledTask>
-          <Title>{task.title}</Title>
-          <Subtitle>
-            {
-              task.subtasks.filter((subtask) => subtask.isCompleted === true)
-                .length
-            }{" "}
-            of {task.subtasks.length} subtasks
-          </Subtitle>
-        </StyledTask>
-      </Modal.Open>
+  const dispatch = useAppDispatch();
 
-      <Modal.Window name="task-view">
+  return (
+    <>
+      <StyledTask
+        onClick={() => dispatch(setCurrentModal(`task-view-${task.id}`))}
+      >
+        <Title>{task.title}</Title>
+        <Subtitle>
+          {
+            task.subtasks.filter((subtask) => subtask.isCompleted === true)
+              .length
+          }{" "}
+          of {task.subtasks.length} subtasks
+        </Subtitle>
+      </StyledTask>
+
+      <ModalComponent name={`task-view-${task.id}`}>
         <ViewTask task={task} />
-      </Modal.Window>
-    </Modal>
+      </ModalComponent>
+    </>
   );
 };
 
