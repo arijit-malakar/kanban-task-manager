@@ -11,14 +11,22 @@ import Heading from "../../ui/Heading";
 import {
   Task as TaskType,
   addTask,
+  editTask,
   getCurrentBoard,
 } from "../boards/boardSlice";
 import { setCurrentModal } from "../modal/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 
-interface CreateTaskFormProps {}
+interface CreateTaskFormProps {
+  taskToEdit?: TaskType;
+}
 
-const CreateTaskForm: React.FC<CreateTaskFormProps> = () => {
+const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
+  taskToEdit = { id: null },
+}) => {
+  const { id: editId, ...editValues } = taskToEdit;
+  const isFormEditable = editId !== null && editId !== undefined;
+
   const {
     register,
     control,
@@ -26,9 +34,11 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = () => {
     reset,
     formState: { errors },
   } = useForm<TaskType>({
-    defaultValues: {
-      subtasks: [{ title: "", isCompleted: false }],
-    },
+    defaultValues: isFormEditable
+      ? editValues
+      : {
+          subtasks: [{ title: "", isCompleted: false }],
+        },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -50,12 +60,22 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = () => {
     );
     if (selectedOption) {
       const statusId = selectedOption.id;
-      dispatch(
-        addTask({
-          boardId: board?.id as number,
-          task: { ...data, statusId: statusId as number },
-        })
-      );
+      if (isFormEditable) {
+        dispatch(
+          editTask({
+            boardId: board?.id as number,
+            columnId: taskToEdit.statusId,
+            newTask: { ...data, id: editId },
+          })
+        );
+      } else {
+        dispatch(
+          addTask({
+            boardId: board?.id as number,
+            task: { ...data, statusId: statusId as number },
+          })
+        );
+      }
       reset();
       dispatch(setCurrentModal(""));
     }
@@ -64,7 +84,9 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = () => {
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow>
-        <Heading as="h4">Add New Task</Heading>
+        <Heading as="h4">
+          {isFormEditable ? "Edit Task" : "Add New Task"}
+        </Heading>
       </FormRow>
 
       <FormRow label="Title" error={errors.title?.message}>
@@ -78,13 +100,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = () => {
       </FormRow>
 
       <FormRow label="Description" error={errors.description?.message}>
-        <Input
-          type="text"
-          id="description"
-          {...register("description", {
-            required: "Description is required",
-          })}
-        />
+        <Input type="text" id="description" {...register("description")} />
       </FormRow>
 
       {fields.map((field, index) => (
@@ -130,12 +146,9 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = () => {
       </FormRow>
 
       <FormRow>
-        <>
-          <Button type="submit">
-            {/* {isFormEditable ? "Save Changes" : "Create New Board"} */}
-            Create Task
-          </Button>
-        </>
+        <Button type="submit">
+          {isFormEditable ? "Save Changes" : "Create Task"}
+        </Button>
       </FormRow>
     </Form>
   );

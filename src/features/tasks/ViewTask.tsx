@@ -4,6 +4,8 @@ import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Heading from "../../ui/Heading";
 import Select from "../../ui/Select";
+import Menus from "../../ui/Menus";
+import ModifyTask from "./ModifyTask";
 import {
   Task as TaskType,
   getCurrentBoard,
@@ -54,6 +56,9 @@ const ViewTask: React.FC<ViewTaskProps> = ({ task }) => {
         <>
           <TaskHeader>
             <Heading as="h4">{task.title}</Heading>
+            <Menus>
+              <ModifyTask task={task} />
+            </Menus>
           </TaskHeader>
           <p>{task.description || "No description"}</p>
         </>

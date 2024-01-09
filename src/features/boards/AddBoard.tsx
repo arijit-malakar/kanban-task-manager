@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { TbLayoutBoardSplit } from "react-icons/tb";
 import CreateBoardForm from "./CreateBoardForm";
-import ModalComponent from "../modal/ModalComponent";
+import Modal from "../modal/Modal";
 import { useAppDispatch } from "../../hooks";
 import { setCurrentModal } from "../modal/modalSlice";
 
@@ -37,26 +37,14 @@ const AddBoard = () => {
   const dispatch = useAppDispatch();
 
   return (
-    // <Modal>
-    //   <Modal.Open opens="board-form">
-    //     <AddBoardButton>
-    //       <TbLayoutBoardSplit />
-    //       <span>+ Create New Board</span>
-    //     </AddBoardButton>
-    //   </Modal.Open>
-
-    //   <Modal.Window name="board-form">
-    //     <CreateBoardForm />
-    //   </Modal.Window>
-    // </Modal>
     <>
       <AddBoardButton onClick={() => dispatch(setCurrentModal("board-form"))}>
         <TbLayoutBoardSplit />
         <span>+ Create New Board</span>
       </AddBoardButton>
-      <ModalComponent name="board-form">
+      <Modal name="board-form">
         <CreateBoardForm />
-      </ModalComponent>
+      </Modal>
     </>
   );
 };

@@ -17,6 +17,8 @@ const StyledModal = styled.div<StyledModalProps>`
   box-shadow: var(--shadow-lg);
   padding: 3.2rem 4rem;
   transition: all 0.5s;
+  max-height: 95%;
+  overflow-y: auto;
 `;
 
 const Overlay = styled.div`
@@ -31,16 +33,17 @@ const Overlay = styled.div`
   transition: all 0.5s;
 `;
 
-interface ModalComponentProps {
+interface ModalProps {
   children: React.ReactNode;
   name: string;
+  prevModal?: string;
 }
 
-const ModalComponent: React.FC<ModalComponentProps> = ({ children, name }) => {
+const Modal: React.FC<ModalProps> = ({ children, name, prevModal }) => {
   const modalName = useAppSelector((state) => state.modal.modalName);
   const dispatch = useAppDispatch();
   const modalRef = useOutsideClick(() => {
-    dispatch(setCurrentModal(""));
+    dispatch(setCurrentModal(prevModal || ""));
   });
 
   if (!modalName || modalName !== name) return null;
@@ -52,4 +55,4 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ children, name }) => {
   );
 };
 
-export default ModalComponent;
+export default Modal;

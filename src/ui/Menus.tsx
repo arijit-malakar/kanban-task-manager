@@ -5,20 +5,15 @@ import {
   useContext,
   useState,
 } from "react";
-import { createPortal } from "react-dom";
 import { HiEllipsisVertical } from "react-icons/hi2";
-import styled, { IStyledComponent, StyleSheetManager } from "styled-components";
+import styled, { IStyledComponent } from "styled-components";
 import { useOutsideClick } from "../hooks/useOutsideClick";
-
-interface Position {
-  x: number;
-  y: number;
-}
 
 const Menu = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  position: relative;
 `;
 
 const StyledToggle = styled.button`
@@ -41,19 +36,18 @@ const StyledToggle = styled.button`
 `;
 
 interface StyledListProps {
-  position: Position;
   ref: React.RefObject<HTMLDivElement>;
 }
 
 const StyledList = styled.ul<StyledListProps>`
-  position: fixed;
+  position: absolute;
+  z-index: 9999;
 
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-md);
   border-radius: var(--border-radius-md);
-
-  right: ${(props) => props.position.x}px;
-  top: ${(props) => props.position.y}px;
+  right: 0px;
+  top: calc(100% + 5px);
 `;
 
 const StyledButton = styled.button`
@@ -78,6 +72,10 @@ const StyledButton = styled.button`
     height: 1.6rem;
     color: var(--color-grey-400);
     transition: all 0.3s;
+  }
+
+  & span {
+    text-wrap: nowrap;
   }
 `;
 
@@ -114,47 +112,27 @@ interface MenusComponent extends React.FC<MenusProps> {
 interface MenusContext {
   openId: string;
   setOpenId: React.Dispatch<React.SetStateAction<string>>;
-  position: Position;
-  setPosition: React.Dispatch<React.SetStateAction<Position>>;
 }
-
-const defaultPosition: Position = {
-  x: 0,
-  y: 0,
-};
 
 const MenusContext = createContext<MenusContext>({
   openId: "",
   setOpenId: () => {},
-  position: defaultPosition,
-  setPosition: () => {},
 });
 
 const Menus: MenusComponent = ({ children }) => {
   const [openId, setOpenId] = useState("");
-  const [position, setPosition] = useState<Position>(defaultPosition);
   return (
-    <MenusContext.Provider value={{ openId, setOpenId, position, setPosition }}>
+    <MenusContext.Provider value={{ openId, setOpenId }}>
       {children}
     </MenusContext.Provider>
   );
 };
 
 const Toggle: React.FC<ToggleProps> = ({ id }) => {
-  const { openId, setOpenId, setPosition } = useContext(MenusContext);
+  const { openId, setOpenId } = useContext(MenusContext);
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
-
-    const rect = (e.target as HTMLElement)
-      .closest("button")
-      ?.getBoundingClientRect();
-    if (rect) {
-      const { x, y, width, height } = rect;
-      setPosition({
-        x: window.innerWidth - width - x,
-        y: y + height + 8,
-      });
-    }
+    e.preventDefault();
     setOpenId(id !== openId || !openId ? id : "");
   };
 
@@ -166,24 +144,18 @@ const Toggle: React.FC<ToggleProps> = ({ id }) => {
 };
 
 const List: React.FC<ListProps> = ({ id, children }) => {
-  const { openId, setOpenId, position } = useContext(MenusContext);
+  const { openId, setOpenId } = useContext(MenusContext);
   const ref = useOutsideClick(setOpenId, false);
 
   if (openId !== id) return null;
 
-  return createPortal(
-    <StyleSheetManager shouldForwardProp={(prop) => prop !== "position"}>
-      <StyledList position={position} ref={ref}>
-        {children}
-      </StyledList>
-    </StyleSheetManager>,
-    document.body
-  );
+  return <StyledList ref={ref}>{children}</StyledList>;
 };
 
 const Button: React.FC<ButtonProps> = ({ children, icon, onClick }) => {
   const { setOpenId } = useContext(MenusContext);
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
     onClick?.();
     setOpenId("");
   };

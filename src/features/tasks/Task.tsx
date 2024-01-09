@@ -1,9 +1,12 @@
 import styled from "styled-components";
 import ViewTask from "./ViewTask";
-import ModalComponent from "../modal/ModalComponent";
+import Modal from "../modal/Modal";
 import { Task as TaskType } from "../boards/boardSlice";
 import { useAppDispatch } from "../../hooks";
 import { setCurrentModal } from "../modal/modalSlice";
+import CreateTaskForm from "./CreateTaskForm";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+// import Menus from "../../ui/Menus";
 
 const StyledTask = styled.div`
   background-color: var(--color-grey-0);
@@ -27,6 +30,10 @@ const Subtitle = styled.p`
 const Task: React.FC<{ task: TaskType }> = ({ task }) => {
   const dispatch = useAppDispatch();
 
+  const handleTaskDelete = () => {
+    console.log("task deleted");
+  };
+
   return (
     <>
       <StyledTask
@@ -42,9 +49,21 @@ const Task: React.FC<{ task: TaskType }> = ({ task }) => {
         </Subtitle>
       </StyledTask>
 
-      <ModalComponent name={`task-view-${task.id}`}>
+      <Modal name={`task-view-${task.id}`}>
         <ViewTask task={task} />
-      </ModalComponent>
+      </Modal>
+
+      <Modal name={`task-edit-${task.id}`} prevModal={`task-view-${task.id}`}>
+        <CreateTaskForm taskToEdit={task} />
+      </Modal>
+
+      <Modal name={`task-delete-${task.id}`} prevModal={`task-view-${task.id}`}>
+        <ConfirmDelete
+          resourceName={`task: ${task.title}`}
+          onConfirm={handleTaskDelete}
+          onCloseModal={() => dispatch(setCurrentModal(`task-view-${task.id}`))}
+        />
+      </Modal>
     </>
   );
 };

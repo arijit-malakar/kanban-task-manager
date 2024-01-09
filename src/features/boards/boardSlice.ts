@@ -125,6 +125,57 @@ const boardSlice = createSlice({
       }
     },
 
+    editTask(
+      state,
+      action: PayloadAction<{
+        boardId: number;
+        columnId: number;
+        newTask: Task;
+      }>
+    ) {
+      const { boardId, columnId, newTask } = action.payload;
+
+      const updatedBoards = state.boards.map((board) => {
+        if (board.id === boardId) {
+          const sourceColumn = board.columns.find(
+            (column) => column.id === columnId
+          );
+          const destColumn = board.columns.find(
+            (column) => column.id === newTask.statusId
+          );
+
+          if (sourceColumn && destColumn) {
+            const updatedSouceTasks = sourceColumn.tasks?.filter(
+              (task) => task.id !== newTask.id
+            );
+
+            destColumn.tasks?.push(newTask);
+
+            return {
+              ...board,
+              columns: board.columns.map((column) => {
+                if (column.id === columnId) {
+                  return {
+                    ...column,
+                    tasks: updatedSouceTasks,
+                  };
+                } else if (column.id === newTask.statusId) {
+                  return {
+                    ...column,
+                    tasks: destColumn.tasks,
+                  };
+                }
+                return column;
+              }),
+            };
+          }
+        }
+        return board;
+      });
+
+      state.boards = updatedBoards;
+    },
+
     updateTaskStatus(
       state,
       action: PayloadAction<{
@@ -253,6 +304,7 @@ export const {
   deleteBoard,
   addColumn,
   addTask,
+  editTask,
   updateTaskStatus,
   updateSubtask,
 } = boardSlice.actions;

@@ -2,9 +2,9 @@ import { HiPencil, HiTrash } from "react-icons/hi2";
 import CreateBoardForm from "./CreateBoardForm";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import Menus from "../../ui/Menus";
+import Modal from "../modal/Modal";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { deleteBoard, getCurrentBoard, setCurrentBoard } from "./boardSlice";
-import ModalComponent from "../modal/ModalComponent";
 import { setCurrentModal } from "../modal/modalSlice";
 
 const ModifyBoard = () => {
@@ -37,17 +37,17 @@ const ModifyBoard = () => {
         </Menus.Button>
       </Menus.List>
 
-      <ModalComponent name="board-edit">
+      <Modal name="board-edit">
         <CreateBoardForm boardToEdit={board} />
-      </ModalComponent>
+      </Modal>
 
-      <ModalComponent name="board-delete">
+      <Modal name="board-delete">
         <ConfirmDelete
           resourceName={`board: ${board?.name}`}
           onConfirm={handleBoardDelete}
           onCloseModal={() => dispatch(setCurrentModal(""))}
         />
-      </ModalComponent>
+      </Modal>
     </Menus.Menu>
   );
 };

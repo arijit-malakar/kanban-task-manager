@@ -5,6 +5,14 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "plugins": [
+      {
+        "name": "@styled/typescript-styled-plugin",
+        "lint": {
+          "validProperties": ["text-wrap"]
+        }
+      }
+    ],
 
     /* Bundler mode */
     "moduleResolution": "bundler",

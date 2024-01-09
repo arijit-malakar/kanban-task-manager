@@ -1,6 +1,6 @@
 import CreateTaskForm from "./CreateTaskForm";
 import Button from "../../ui/Button";
-import ModalComponent from "../modal/ModalComponent";
+import Modal from "../modal/Modal";
 import { useAppDispatch } from "../../hooks";
 import { setCurrentModal } from "../modal/modalSlice";
 
@@ -16,9 +16,9 @@ const AddTask = () => {
         + Add New Task
       </Button>
 
-      <ModalComponent name="task-form">
+      <Modal name="task-form">
         <CreateTaskForm />
-      </ModalComponent>
+      </Modal>
     </>
   );
 };
