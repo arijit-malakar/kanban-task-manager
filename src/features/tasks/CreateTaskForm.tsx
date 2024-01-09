@@ -65,7 +65,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
           editTask({
             boardId: board?.id as number,
             columnId: taskToEdit.statusId,
-            newTask: { ...data, id: editId },
+            newTask: { ...data, id: editId, statusId: statusId as number },
           })
         );
       } else {

@@ -137,19 +137,84 @@ const boardSlice = createSlice({
 
       const updatedBoards = state.boards.map((board) => {
         if (board.id === boardId) {
-          const sourceColumn = board.columns.find(
-            (column) => column.id === columnId
-          );
-          const destColumn = board.columns.find(
-            (column) => column.id === newTask.statusId
-          );
-
-          if (sourceColumn && destColumn) {
-            const updatedSouceTasks = sourceColumn.tasks?.filter(
-              (task) => task.id !== newTask.id
+          if (columnId === newTask.statusId) {
+            return {
+              ...board,
+              columns: board.columns.map((column) => {
+                if (column.id === columnId) {
+                  return {
+                    ...column,
+                    tasks: column.tasks?.map((task) => {
+                      if (task.id === newTask.id) {
+                        return newTask;
+                      }
+                      return task;
+                    }),
+                  };
+                }
+                return column;
+              }),
+            };
+          } else {
+            const sourceColumn = board.columns.find(
+              (column) => column.id === columnId
+            );
+            const destColumn = board.columns.find(
+              (column) => column.id === newTask.statusId
             );
 
-            destColumn.tasks?.push(newTask);
+            if (sourceColumn && destColumn) {
+              const updatedSouceTasks = sourceColumn.tasks?.filter(
+                (task) => task.id !== newTask.id
+              );
+
+              destColumn.tasks?.push(newTask);
+
+              return {
+                ...board,
+                columns: board.columns.map((column) => {
+                  if (column.id === columnId) {
+                    return {
+                      ...column,
+                      tasks: updatedSouceTasks,
+                    };
+                  } else if (column.id === newTask.statusId) {
+                    return {
+                      ...column,
+                      tasks: destColumn.tasks,
+                    };
+                  }
+                  return column;
+                }),
+              };
+            }
+          }
+        }
+        return board;
+      });
+
+      state.boards = updatedBoards;
+    },
+
+    deleteTask(
+      state,
+      action: PayloadAction<{
+        boardId: number;
+        columnId: number;
+        taskId: number;
+      }>
+    ) {
+      const { boardId, columnId, taskId } = action.payload;
+
+      const updatedBoards = state.boards.map((board) => {
+        if (board.id === boardId) {
+          const targetColumn = board.columns.find(
+            (column) => column.id === columnId
+          );
+          if (targetColumn) {
+            const updatedTasks = targetColumn.tasks?.filter(
+              (task) => task.id !== taskId
+            );
 
             return {
               ...board,
@@ -157,12 +222,7 @@ const boardSlice = createSlice({
                 if (column.id === columnId) {
                   return {
                     ...column,
-                    tasks: updatedSouceTasks,
-                  };
-                } else if (column.id === newTask.statusId) {
-                  return {
-                    ...column,
-                    tasks: destColumn.tasks,
+                    tasks: updatedTasks,
                   };
                 }
                 return column;
@@ -305,6 +365,7 @@ export const {
   addColumn,
   addTask,
   editTask,
+  deleteTask,
   updateTaskStatus,
   updateSubtask,
 } = boardSlice.actions;

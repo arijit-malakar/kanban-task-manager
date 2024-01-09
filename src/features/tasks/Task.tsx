@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import ViewTask from "./ViewTask";
-import Modal from "../modal/Modal";
-import { Task as TaskType } from "../boards/boardSlice";
-import { useAppDispatch } from "../../hooks";
-import { setCurrentModal } from "../modal/modalSlice";
 import CreateTaskForm from "./CreateTaskForm";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-// import Menus from "../../ui/Menus";
+import Modal from "../modal/Modal";
+import { Task as TaskType, deleteTask } from "../boards/boardSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { setCurrentModal } from "../modal/modalSlice";
 
 const StyledTask = styled.div`
   background-color: var(--color-grey-0);
@@ -29,9 +28,15 @@ const Subtitle = styled.p`
 
 const Task: React.FC<{ task: TaskType }> = ({ task }) => {
   const dispatch = useAppDispatch();
+  const boardId = useAppSelector((state) => state.boards.currentBoardId);
 
   const handleTaskDelete = () => {
-    console.log("task deleted");
+    if (boardId) {
+      dispatch(
+        deleteTask({ boardId, columnId: task.statusId, taskId: task.id })
+      );
+      dispatch(setCurrentModal(""));
+    }
   };
 
   return (
