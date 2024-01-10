@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import Column from "./Column";
+import Column from "../columns/Column";
+import AddColumn from "../columns/AddColumn";
 import { useAppSelector } from "../../hooks";
 import { getCurrentBoard } from "./boardSlice";
 
@@ -16,6 +17,7 @@ const Board = () => {
       {board?.columns.map((column) => (
         <Column name={column.name} tasks={column.tasks || []} key={column.id} />
       ))}
+      {board?.columns && board?.columns?.length < 6 && <AddColumn />}
     </StyledBoard>
   );
 };

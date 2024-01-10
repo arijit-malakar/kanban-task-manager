@@ -14,8 +14,9 @@ const StyledApp = styled.div`
 
 const Main = styled.main`
   background-color: var(--color-grey-50);
-  padding: 3.2rem 4.8rem 6.4rem;
-  overflow: scroll;
+  padding: 3.2rem 3rem;
+  display: flex;
+  overflow: auto;
 `;
 
 const App = () => {

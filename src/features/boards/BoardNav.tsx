@@ -1,6 +1,7 @@
 import styled, { StyleSheetManager, css } from "styled-components";
 import { TbLayoutBoardSplit } from "react-icons/tb";
 import AddBoard from "./AddBoard";
+import Label from "../../ui/Label";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setCurrentBoard } from "./boardSlice";
 
@@ -56,14 +57,6 @@ const NavButton = styled.button<NavButtonProps>`
     height: 2.4rem;
     transition: all 0.3s;
   }
-`;
-
-const Label = styled.p`
-  font-size: 1.6rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.4px;
-  color: var(--color-grey-500);
 `;
 
 const BoardNav = () => {
