@@ -1,13 +1,25 @@
-import styled from "styled-components";
+import styled, { StyleSheetManager, css } from "styled-components";
 import GlobalStyles from "./styles/GlobalStyles";
 import Header from "./ui/Header";
-import Sidebar from "./ui/Sidebar";
+import Sidebar from "./features/sidebar/Sidebar";
 import Board from "./features/boards/Board";
+import { useAppSelector } from "./hooks";
+import SidebarShow from "./features/sidebar/SidebarShow";
 
-const StyledApp = styled.div`
+interface StyledAppProps {
+  showSidebar: boolean;
+}
+
+const StyledApp = styled.div<StyledAppProps>`
   display: grid;
-  grid-template-columns: 28rem 1fr;
-  /* 1fr if Sidebar is hidden */
+  ${(props) =>
+    props.showSidebar
+      ? css`
+          grid-template-columns: 28rem 1fr;
+        `
+      : css`
+          grid-template-columns: 1fr;
+        `}
   grid-template-rows: auto 1fr;
   height: 100vh;
 `;
@@ -17,19 +29,25 @@ const Main = styled.main`
   padding: 3.2rem 3rem;
   display: flex;
   overflow: auto;
+  position: relative;
 `;
 
 const App = () => {
+  const showSidebar = useAppSelector((state) => state.sidebar.isOpen);
+
   return (
     <>
       <GlobalStyles />
-      <StyledApp>
-        <Header />
-        <Sidebar />
-        <Main>
-          <Board />
-        </Main>
-      </StyledApp>
+      <StyleSheetManager shouldForwardProp={(prop) => prop !== "showSidebar"}>
+        <StyledApp showSidebar={showSidebar}>
+          <Header />
+          <Sidebar />
+          <Main>
+            <Board />
+            <SidebarShow />
+          </Main>
+        </StyledApp>
+      </StyleSheetManager>
     </>
   );
 };
