@@ -354,6 +354,98 @@ const boardSlice = createSlice({
 
       state.boards = updatedBoards;
     },
+
+    dragDropTask(
+      state,
+      action: PayloadAction<{
+        boardId: number;
+        sourceColumnId: number;
+        destColumnId: number;
+        taskId: number;
+        destTaskIndex: number;
+      }>
+    ) {
+      const { boardId, sourceColumnId, destColumnId, taskId, destTaskIndex } =
+        action.payload;
+
+      const updatedBoards = state.boards.map((board) => {
+        if (board.id === boardId) {
+          const sourceColumn = board.columns.find(
+            (column) => column.id === sourceColumnId
+          );
+
+          if (sourceColumnId === destColumnId) {
+            if (sourceColumn) {
+              const taskToMove = sourceColumn.tasks?.find(
+                (task) => task.id === taskId
+              );
+
+              if (taskToMove) {
+                const updatedTasks = sourceColumn.tasks?.filter(
+                  (task) => task.id !== taskId
+                );
+                updatedTasks?.splice(destTaskIndex, 0, taskToMove);
+
+                return {
+                  ...board,
+                  columns: board.columns.map((column) => {
+                    if (column.id === sourceColumnId) {
+                      return {
+                        ...column,
+                        tasks: updatedTasks,
+                      };
+                    }
+                    return column;
+                  }),
+                };
+              }
+            }
+          } else {
+            const destColumn = board.columns.find(
+              (column) => column.id === destColumnId
+            );
+
+            if (sourceColumn && destColumn) {
+              const taskToMove = sourceColumn.tasks?.find(
+                (task) => task.id === taskId
+              );
+
+              if (taskToMove) {
+                const updatedSourceTasks = sourceColumn.tasks?.filter(
+                  (task) => task.id !== taskId
+                );
+                destColumn.tasks?.splice(destTaskIndex, 0, {
+                  ...taskToMove,
+                  status: destColumn.name,
+                  statusId: destColumn.id as number,
+                });
+
+                return {
+                  ...board,
+                  columns: board.columns.map((column) => {
+                    if (column.id === sourceColumnId) {
+                      return {
+                        ...column,
+                        tasks: updatedSourceTasks,
+                      };
+                    } else if (column.id === destColumnId) {
+                      return {
+                        ...column,
+                        tasks: destColumn.tasks,
+                      };
+                    }
+                    return column;
+                  }),
+                };
+              }
+            }
+          }
+        }
+        return board;
+      });
+
+      state.boards = updatedBoards;
+    },
   },
 });
 
@@ -368,6 +460,7 @@ export const {
   deleteTask,
   updateTaskStatus,
   updateSubtask,
+  dragDropTask,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

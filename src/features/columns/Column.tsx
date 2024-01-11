@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import Task from "../tasks/Task";
 import Label from "../../ui/Label";
 import { Task as TaskType } from "../boards/boardSlice";
@@ -25,19 +26,35 @@ const TaskContainer = styled.div`
 interface ColumnProps {
   name: string;
   tasks: TaskType[];
+  id: number;
 }
 
-const Column: React.FC<ColumnProps> = ({ name, tasks }) => {
+const Column: React.FC<ColumnProps> = ({ name, tasks, id }) => {
   return (
     <StyledColumn>
       <Label>
         {name} ({tasks.length})
       </Label>
-      <TaskContainer>
-        {tasks.map((task) => (
-          <Task task={task} key={task.id} />
-        ))}
-      </TaskContainer>
+      <Droppable droppableId={`${id}`}>
+        {(provided) => (
+          <TaskContainer ref={provided.innerRef} {...provided.droppableProps}>
+            {tasks.map((task, index) => (
+              <Draggable draggableId={`${task.id}`} index={index} key={task.id}>
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.dragHandleProps}
+                    {...provided.draggableProps}
+                  >
+                    <Task task={task} />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </TaskContainer>
+        )}
+      </Droppable>
     </StyledColumn>
   );
 };
