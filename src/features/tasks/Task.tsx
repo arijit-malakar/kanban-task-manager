@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Draggable } from "react-beautiful-dnd";
 import ViewTask from "./ViewTask";
 import CreateTaskForm from "./CreateTaskForm";
 import ConfirmDelete from "../../ui/ConfirmDelete";
@@ -7,8 +8,9 @@ import { Task as TaskType, deleteTask } from "../boards/boardSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setCurrentModal } from "../modal/modalSlice";
 
-const StyledTask = styled.div`
-  background-color: var(--color-grey-0);
+const StyledTask = styled.div<{ isDragging: boolean }>`
+  background-color: ${(props) =>
+    props.isDragging ? "var(--color-blue-100)" : "var(--color-grey-0)"};
   border: 1px solid var(--color-grey-100);
   border-radius: var(--border-radius-md);
 
@@ -26,7 +28,12 @@ const Subtitle = styled.p`
   font-weight: 500;
 `;
 
-const Task: React.FC<{ task: TaskType }> = ({ task }) => {
+interface TaskProps {
+  task: TaskType;
+  index: number;
+}
+
+const Task: React.FC<TaskProps> = ({ task, index }) => {
   const dispatch = useAppDispatch();
   const boardId = useAppSelector((state) => state.boards.currentBoardId);
 
@@ -41,18 +48,26 @@ const Task: React.FC<{ task: TaskType }> = ({ task }) => {
 
   return (
     <>
-      <StyledTask
-        onClick={() => dispatch(setCurrentModal(`task-view-${task.id}`))}
-      >
-        <Title>{task.title}</Title>
-        <Subtitle>
-          {
-            task.subtasks.filter((subtask) => subtask.isCompleted === true)
-              .length
-          }{" "}
-          of {task.subtasks.length} subtasks
-        </Subtitle>
-      </StyledTask>
+      <Draggable draggableId={`${task.id}`} index={index} key={task.id}>
+        {(provided, snapshot) => (
+          <StyledTask
+            ref={provided.innerRef}
+            {...provided.dragHandleProps}
+            {...provided.draggableProps}
+            isDragging={snapshot.isDragging}
+            onClick={() => dispatch(setCurrentModal(`task-view-${task.id}`))}
+          >
+            <Title>{task.title}</Title>
+            <Subtitle>
+              {
+                task.subtasks.filter((subtask) => subtask.isCompleted === true)
+                  .length
+              }{" "}
+              of {task.subtasks.length} subtasks
+            </Subtitle>
+          </StyledTask>
+        )}
+      </Draggable>
 
       <Modal name={`task-view-${task.id}`}>
         <ViewTask task={task} />

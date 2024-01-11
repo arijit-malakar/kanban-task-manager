@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Draggable, Droppable } from "react-beautiful-dnd";
+import styled, { StyleSheetManager, css } from "styled-components";
+import { Droppable } from "react-beautiful-dnd";
 import Task from "../tasks/Task";
 import Label from "../../ui/Label";
 import { Task as TaskType } from "../boards/boardSlice";
@@ -11,11 +11,18 @@ const StyledColumn = styled.div`
   width: 28rem;
 `;
 
-const TaskContainer = styled.div`
+const TaskContainer = styled.div<{ isDraggingOver: boolean }>`
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  ${(props) =>
+    props.isDraggingOver &&
+    css`
+      background-color: var(--color-grey-100);
+      border-radius: var(--border-radius-md);
+      padding: 0.4rem;
+    `}
 
   &:empty {
     outline: 2px dashed var(--color-grey-200);
@@ -36,23 +43,23 @@ const Column: React.FC<ColumnProps> = ({ name, tasks, id }) => {
         {name} ({tasks.length})
       </Label>
       <Droppable droppableId={`${id}`}>
-        {(provided) => (
-          <TaskContainer ref={provided.innerRef} {...provided.droppableProps}>
-            {tasks.map((task, index) => (
-              <Draggable draggableId={`${task.id}`} index={index} key={task.id}>
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.dragHandleProps}
-                    {...provided.draggableProps}
-                  >
-                    <Task task={task} />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </TaskContainer>
+        {(provided, snapshot) => (
+          <StyleSheetManager
+            shouldForwardProp={(prop) =>
+              prop !== "isDraggingOver" && prop !== "isDragging"
+            }
+          >
+            <TaskContainer
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              isDraggingOver={snapshot.isDraggingOver}
+            >
+              {tasks.map((task, index) => (
+                <Task task={task} index={index} key={task.id} />
+              ))}
+              {provided.placeholder}
+            </TaskContainer>
+          </StyleSheetManager>
         )}
       </Droppable>
     </StyledColumn>
