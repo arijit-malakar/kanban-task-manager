@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useAppSelector } from "../hooks";
 // import { useDarkMode } from "../context/DarkModeContext";
 
 const StyledLogo = styled.div`
@@ -10,10 +11,9 @@ const Img = styled.img`
 `;
 
 const Logo = () => {
-  //   const { isDarkMode } = useDarkMode();
+  const { isDarkMode } = useAppSelector((state) => state.darkMode);
 
-  //   const src = isDarkMode ? "/logo-dark.png" : "/logo-light.png";
-  const src = "/logo-dark.svg";
+  const src = isDarkMode ? "/logo-light.svg" : "/logo-dark.svg";
 
   return (
     <StyledLogo>
