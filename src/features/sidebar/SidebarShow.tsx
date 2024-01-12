@@ -17,6 +17,10 @@ const ShowButton = styled.button`
   padding: 1rem 1.6rem;
   transition: all 0.3s;
 
+  @media (max-width: 767px) {
+    display: none;
+  }
+
   &:hover {
     background-color: var(--color-brand-500);
   }

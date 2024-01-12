@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
@@ -48,10 +49,11 @@ const Modal: React.FC<ModalProps> = ({ children, name, prevModal }) => {
 
   if (!modalName || modalName !== name) return null;
 
-  return (
+  return createPortal(
     <Overlay>
       <StyledModal ref={modalRef}>{children}</StyledModal>
-    </Overlay>
+    </Overlay>,
+    document.body
   );
 };
 

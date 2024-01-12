@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import { HiEyeSlash, HiOutlineMoon, HiOutlineSun } from "react-icons/hi2";
+import { HiEyeSlash } from "react-icons/hi2";
 import BoardNav from "../boards/BoardNav";
-import Panel from "../../ui/Panel";
-import ButtonIcon from "../../ui/ButtonIcon";
+import DarkModeToggle from "../dark-mode/DarkModeToggle";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { toggleSidebar } from "./sidebarSlice";
 
@@ -12,7 +11,10 @@ const StyledSidebar = styled.aside`
   border-right: 1px solid var(--color-grey-100);
 
   grid-row: 2 / -1;
-  display: flex;
+  display: none;
+  @media (min-width: 768px) {
+    display: flex;
+  }
   flex-direction: column;
   justify-content: space-between;
 `;
@@ -61,14 +63,7 @@ const Sidebar = () => {
         <StyledSidebar>
           <BoardNav />
           <SidebarOptions>
-            <Panel>
-              <ButtonIcon>
-                <HiOutlineSun />
-              </ButtonIcon>
-              <ButtonIcon>
-                <HiOutlineMoon />
-              </ButtonIcon>
-            </Panel>
+            <DarkModeToggle />
             <SidebarToggleButton
               onClick={() => dispatch(toggleSidebar(!showSidebar))}
             >

@@ -15,7 +15,11 @@ const NavList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  margin-left: -2.4rem;
+  margin-left: -4rem;
+
+  @media (min-width: 768px) {
+    margin-left: -2.4rem;
+  }
 `;
 
 interface NavButtonProps {

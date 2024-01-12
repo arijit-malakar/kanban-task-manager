@@ -1,11 +1,17 @@
 import styled from "styled-components";
+import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import Heading from "./Heading";
 import Logo from "./Logo";
-import Menus from "./Menus";
 import ModifyBoard from "../features/boards/ModifyBoard";
 import AddTask from "../features/tasks/AddTask";
-import { useAppSelector } from "../hooks";
+import BoardNav from "../features/boards/BoardNav";
+import DarkModeToggle from "../features/dark-mode/DarkModeToggle";
+import Menus from "./Menus";
+import Modal from "../features/modal/Modal";
+import ButtonIcon from "./ButtonIcon";
 import { getCurrentBoard } from "../features/boards/boardSlice";
+import { setCurrentModal } from "../features/modal/modalSlice";
+import { useAppDispatch, useAppSelector } from "../hooks";
 
 const StyledHeader = styled.header`
   background-color: var(--color-grey-0);
@@ -26,24 +32,42 @@ const HeaderItems = styled.div`
 
 const HeaderOptions = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const Header = () => {
+  const dispatch = useAppDispatch();
   const board = useAppSelector(getCurrentBoard);
+  const modal = useAppSelector((state) => state.modal.modalName);
 
   return (
-    <StyledHeader>
-      <Logo />
-      <HeaderItems>
-        <Heading as="h3">{board?.name}</Heading>
-        <HeaderOptions>
-          <AddTask />
-          <Menus>
-            <ModifyBoard />
-          </Menus>
-        </HeaderOptions>
-      </HeaderItems>
-    </StyledHeader>
+    <>
+      <StyledHeader>
+        <Logo />
+        <HeaderItems>
+          <HeaderOptions>
+            <Heading as="h3">{board?.name}</Heading>
+            <ButtonIcon
+              className="show-mobile"
+              onClick={() => dispatch(setCurrentModal("sidebar"))}
+            >
+              {modal === "sidebar" ? <HiChevronUp /> : <HiChevronDown />}
+            </ButtonIcon>
+          </HeaderOptions>
+          <HeaderOptions>
+            <AddTask />
+            <Menus>
+              <ModifyBoard />
+            </Menus>
+          </HeaderOptions>
+        </HeaderItems>
+      </StyledHeader>
+
+      <Modal name="sidebar">
+        <BoardNav />
+        <DarkModeToggle />
+      </Modal>
+    </>
   );
 };
 

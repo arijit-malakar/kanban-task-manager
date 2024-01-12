@@ -1,4 +1,4 @@
-import styled, { StyleSheetManager, css } from "styled-components";
+import styled, { StyleSheetManager } from "styled-components";
 import GlobalStyles from "./styles/GlobalStyles";
 import Header from "./ui/Header";
 import Sidebar from "./features/sidebar/Sidebar";
@@ -12,14 +12,13 @@ interface StyledAppProps {
 
 const StyledApp = styled.div<StyledAppProps>`
   display: grid;
-  ${(props) =>
-    props.showSidebar
-      ? css`
-          grid-template-columns: 28rem 1fr;
-        `
-      : css`
-          grid-template-columns: 1fr;
-        `}
+  grid-template-columns: ${(props) =>
+    props.showSidebar ? "28rem 1fr" : "1fr"};
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
+
   grid-template-rows: auto 1fr;
   height: 100vh;
 `;

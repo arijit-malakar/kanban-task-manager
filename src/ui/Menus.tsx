@@ -47,7 +47,7 @@ const StyledList = styled.ul<StyledListProps>`
   box-shadow: var(--shadow-md);
   border-radius: var(--border-radius-md);
   right: 0px;
-  top: calc(100% + 5px);
+  top: calc(100% + 10px);
 `;
 
 const StyledButton = styled.button`

@@ -7,6 +7,12 @@ const ButtonIcon = styled.button`
   border-radius: var(--border-radius-sm);
   transition: all 0.2s;
 
+  @media (min-width: 768px) {
+    &.show-mobile {
+      display: none;
+    }
+  }
+
   &:hover {
     background-color: var(--color-grey-100);
   }
