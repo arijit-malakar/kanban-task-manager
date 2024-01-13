@@ -8,6 +8,18 @@ const StyledConfirmDelete = styled.div`
   flex-direction: column;
   gap: 1.2rem;
 
+  @media (max-width: 480px) {
+    width: 34rem;
+  }
+
+  @media (max-width: 425px) {
+    width: 32rem;
+  }
+
+  @media (max-width: 390px) {
+    width: 30rem;
+  }
+
   & p {
     color: var(--color-grey-500);
     margin-bottom: 1.2rem;
@@ -40,7 +52,7 @@ const ConfirmDelete: React.FC<ConfirmDeleteProps> = ({
     <StyledConfirmDelete>
       <Heading as="h3">Delete {resourceName}</Heading>
       <p>
-        Are you sure you want to delete {resourceName} permanently? This action
+        Are you sure you want to delete this resource permanently? This action
         cannot be undone.
       </p>
 

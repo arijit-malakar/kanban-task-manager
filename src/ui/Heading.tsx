@@ -20,6 +20,13 @@ const Heading = styled.h1`
     css`
       font-size: 2rem;
       font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @media (max-width: 480px) {
+        font-size: 1.6rem;
+      }
     `}
 
     ${(props) =>

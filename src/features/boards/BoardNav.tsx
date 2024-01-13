@@ -1,9 +1,11 @@
-import styled, { StyleSheetManager, css } from "styled-components";
+import styled, { StyleSheetManager } from "styled-components";
 import { TbLayoutBoardSplit } from "react-icons/tb";
 import AddBoard from "./AddBoard";
 import Label from "../../ui/Label";
+import ButtonNav from "../../ui/ButtonNav";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setCurrentBoard } from "./boardSlice";
+import { setCurrentModal } from "../modal/modalSlice";
 
 const StyledBoardNav = styled.div<{ modal: string }>`
   display: flex;
@@ -22,47 +24,6 @@ const NavList = styled.div`
   }
 `;
 
-interface NavButtonProps {
-  active: boolean;
-}
-
-const NavButton = styled.button<NavButtonProps>`
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-
-  color: var(--color-grey-600);
-  background-color: unset;
-  font-size: 1.6rem;
-  font-weight: 500;
-  border: unset;
-  border-radius: var(--border-radius-semi);
-  padding: 1.2rem 2.4rem;
-  transition: all 0.3s;
-
-  &:hover {
-    ${(props) =>
-      !props.active &&
-      css`
-        color: var(--color-grey-800);
-        background-color: var(--color-brand-200);
-      `}
-  }
-
-  ${(props) =>
-    props.active &&
-    css`
-      color: var(--color-brand-50);
-      background-color: var(--color-brand-600);
-    `}
-
-  & svg {
-    width: 2.4rem;
-    height: 2.4rem;
-    transition: all 0.3s;
-  }
-`;
-
 const BoardNav = () => {
   const dispatch = useAppDispatch();
   const { boards, currentBoardId } = useAppSelector((state) => state.boards);
@@ -76,14 +37,20 @@ const BoardNav = () => {
         <Label>All Boards ({boards.length})</Label>
         <NavList>
           {boards.map((board) => (
-            <NavButton
+            <ButtonNav
+              variation="primary"
               active={currentBoardId === board.id}
               key={board.id}
-              onClick={() => dispatch(setCurrentBoard(board.id))}
+              onClick={() => {
+                dispatch(setCurrentBoard(board.id));
+                if (modal === "sidebar") {
+                  dispatch(setCurrentModal(""));
+                }
+              }}
             >
               <TbLayoutBoardSplit />
               <span>{board.name}</span>
-            </NavButton>
+            </ButtonNav>
           ))}
           <AddBoard />
         </NavList>

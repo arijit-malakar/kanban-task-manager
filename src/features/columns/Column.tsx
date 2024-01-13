@@ -40,7 +40,7 @@ const Column: React.FC<ColumnProps> = ({ name, tasks, id }) => {
   return (
     <StyledColumn>
       <Label>
-        {name} ({tasks.length})
+        <span>{name}</span> ({tasks.length})
       </Label>
       <Droppable droppableId={`${id}`}>
         {(provided, snapshot) => (

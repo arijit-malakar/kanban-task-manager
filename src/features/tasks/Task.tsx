@@ -12,6 +12,7 @@ const StyledTask = styled.div<{ isDragging: boolean }>`
   background-color: ${(props) =>
     props.isDragging ? "var(--color-blue-100)" : "var(--color-grey-0)"};
   border: 1px solid var(--color-grey-100);
+  box-shadow: var(--shadow-box);
   border-radius: var(--border-radius-md);
 
   padding: 1.8rem 1.6rem;
@@ -20,11 +21,12 @@ const StyledTask = styled.div<{ isDragging: boolean }>`
   gap: 1.2rem;
 `;
 const Title = styled.h5`
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 500;
 `;
 const Subtitle = styled.p`
   color: var(--color-grey-500);
+  font-size: 1.4rem;
   font-weight: 500;
 `;
 

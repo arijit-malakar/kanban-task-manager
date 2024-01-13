@@ -48,6 +48,14 @@ const HeaderItems = styled.div`
 const HeaderOptions = styled.div`
   display: flex;
   align-items: center;
+
+  & h3 {
+    width: 19.6rem;
+
+    @media (max-width: 480px) {
+      width: 13.2rem;
+    }
+  }
 `;
 
 const Header = () => {
