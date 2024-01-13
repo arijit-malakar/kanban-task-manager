@@ -75,7 +75,7 @@ const StyledButton = styled.button`
   }
 
   & span {
-    text-wrap: nowrap;
+    white-space: nowrap;
   }
 `;
 
