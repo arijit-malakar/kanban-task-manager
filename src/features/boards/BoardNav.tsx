@@ -5,10 +5,10 @@ import Label from "../../ui/Label";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setCurrentBoard } from "./boardSlice";
 
-const StyledBoardNav = styled.div`
+const StyledBoardNav = styled.div<{ modal: string }>`
   display: flex;
   flex-direction: column;
-  gap: 3.2rem;
+  gap: ${(props) => (props.modal === "sidebar" ? "2rem" : "3.2rem")};
 `;
 
 const NavList = styled.div`
@@ -64,12 +64,15 @@ const NavButton = styled.button<NavButtonProps>`
 `;
 
 const BoardNav = () => {
-  const { boards, currentBoardId } = useAppSelector((state) => state.boards);
   const dispatch = useAppDispatch();
+  const { boards, currentBoardId } = useAppSelector((state) => state.boards);
+  const modal = useAppSelector((state) => state.modal.modalName);
 
   return (
-    <StyleSheetManager shouldForwardProp={(prop) => prop !== "active"}>
-      <StyledBoardNav>
+    <StyleSheetManager
+      shouldForwardProp={(prop) => prop !== "active" && prop !== "modal"}
+    >
+      <StyledBoardNav modal={modal}>
         <Label>All Boards ({boards.length})</Label>
         <NavList>
           {boards.map((board) => (

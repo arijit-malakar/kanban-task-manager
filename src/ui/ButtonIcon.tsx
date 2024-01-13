@@ -7,8 +7,14 @@ const ButtonIcon = styled.button`
   border-radius: var(--border-radius-sm);
   transition: all 0.2s;
 
+  &.toggle-board {
+    & svg {
+      stroke-width: 2px;
+    }
+  }
+
   @media (min-width: 768px) {
-    &.show-mobile {
+    &.toggle-board {
       display: none;
     }
   }

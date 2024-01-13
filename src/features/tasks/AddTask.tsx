@@ -1,8 +1,20 @@
+import styled from "styled-components";
 import CreateTaskForm from "./CreateTaskForm";
 import Button from "../../ui/Button";
 import Modal from "../modal/Modal";
 import { useAppDispatch } from "../../hooks";
 import { setCurrentModal } from "../modal/modalSlice";
+
+const ButtonText = styled.div`
+  @media (max-width: 767px) {
+    font-size: 3.2rem;
+    line-height: 0.4;
+
+    & span {
+      display: none;
+    }
+  }
+`;
 
 const AddTask = () => {
   const dispatch = useAppDispatch();
@@ -13,7 +25,9 @@ const AddTask = () => {
         onClick={() => dispatch(setCurrentModal("task-form"))}
         variation="primary"
       >
-        + Add New Task
+        <ButtonText>
+          + <span>Add New Task</span>
+        </ButtonText>
       </Button>
 
       <Modal name="task-form">

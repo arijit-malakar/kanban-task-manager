@@ -20,6 +20,10 @@ const StyledModal = styled.div<StyledModalProps>`
   transition: all 0.5s;
   max-height: 95%;
   overflow-y: auto;
+
+  @media (max-width: 767px) {
+    max-height: 85%;
+  }
 `;
 
 const Overlay = styled.div`

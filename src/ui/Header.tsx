@@ -5,8 +5,7 @@ import Logo from "./Logo";
 import ModifyBoard from "../features/boards/ModifyBoard";
 import CreateBoardForm from "../features/boards/CreateBoardForm";
 import AddTask from "../features/tasks/AddTask";
-import BoardNav from "../features/boards/BoardNav";
-import DarkModeToggle from "../features/dark-mode/DarkModeToggle";
+import SidebarModal from "../features/sidebar/SidebarModal";
 import Menus from "./Menus";
 import Modal from "../features/modal/Modal";
 import ButtonIcon from "./ButtonIcon";
@@ -23,6 +22,20 @@ const StyledHeader = styled.header`
   display: grid;
   grid-template-columns: 23.2rem 1fr;
   align-items: center;
+
+  @media (max-width: 767px) {
+    grid-template-columns: auto 1fr;
+    padding: 1.8rem 3.2rem;
+    gap: 1.8rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2rem 2.4rem;
+  }
+
+  @media (max-width: 390px) {
+    padding: 2rem;
+  }
 `;
 
 const HeaderItems = styled.div`
@@ -50,7 +63,7 @@ const Header = () => {
           <HeaderOptions>
             <Heading as="h3">{board?.name}</Heading>
             <ButtonIcon
-              className="show-mobile"
+              className="toggle-board"
               onClick={() => {
                 dispatch(toggleSidebar(false));
                 dispatch(setCurrentModal("sidebar"));
@@ -69,8 +82,7 @@ const Header = () => {
       </StyledHeader>
 
       <Modal name="sidebar">
-        <BoardNav />
-        <DarkModeToggle />
+        <SidebarModal />
       </Modal>
 
       <Modal name="board-form">
