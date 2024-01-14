@@ -20,7 +20,7 @@ const StyledTask = styled.div<{ isDragging: boolean }>`
   flex-direction: column;
   gap: 1.2rem;
 `;
-const Title = styled.h5`
+const Title = styled.h4`
   font-size: 1.6rem;
   font-weight: 500;
 `;

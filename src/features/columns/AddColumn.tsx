@@ -14,10 +14,10 @@ const StyledAddColumn = styled.div`
 
 const AddButton = styled.button`
   background-color: var(--color-grey-200);
-  color: var(--color-grey-500);
+  color: var(--color-grey-600);
   border: unset;
   border-radius: var(--border-radius-md);
-  font-size: 2rem;
+  font-size: 2.4rem;
   font-weight: 500;
   flex: 1;
   display: flex;

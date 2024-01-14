@@ -137,7 +137,7 @@ const Toggle: React.FC<ToggleProps> = ({ id }) => {
   };
 
   return (
-    <StyledToggle onClick={handleClick}>
+    <StyledToggle onClick={handleClick} aria-label="Menus toggle">
       <HiEllipsisVertical />
     </StyledToggle>
   );
